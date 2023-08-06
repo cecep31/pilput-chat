@@ -9,5 +9,5 @@ import (
 
 // BookRouter is the Router for GoFiber App
 func ChatRouter(app fiber.Router, service book.Service) {
-	app.Get("/chat", handlers.Chat())
+	app.Get("/chat", handlers.Chat(service))
 }

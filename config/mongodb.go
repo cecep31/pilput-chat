@@ -17,13 +17,13 @@ func DatabaseConnection() (*mongo.Database, context.CancelFunc, error) {
 	host := os.Getenv("MONGODB_HOST")
 	port := os.Getenv("MONGODB_PORT")
 	dbname := os.Getenv("MONGODB_DB")
-	mongodburl := fmt.Sprintf("mongodb://%v:%v@%s:%v/%v", username, pswd, host, port, dbname)
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongodburl).SetServerSelectionTimeout(5*time.
-		Second))
+	mongodburl := fmt.Sprintf("mongodb://%v:%v@%s:%v", username, pswd, host, port)
+	fmt.Println(mongodburl)
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongodburl).SetServerSelectionTimeout(5*time.Second))
 	if err != nil {
 		cancel()
 		return nil, nil, err
 	}
-	db := client.Database("books")
+	db := client.Database(dbname)
 	return db, cancel, nil
 }

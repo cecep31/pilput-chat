@@ -1,8 +1,12 @@
 package handlers
 
 import (
+	"fmt"
 	"log"
 	"sync"
+
+	"pilput-chat/pkg/book"
+	"pilput-chat/pkg/entities"
 
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
@@ -55,14 +59,19 @@ func RunHub() {
 	}
 }
 
-func Chat() fiber.Handler {
+func Chat(service book.Service) fiber.Handler {
 	return websocket.New(func(c *websocket.Conn) {
 		defer func() {
 			unregister <- c
 			c.Close()
 		}()
 		register <- c
-
+		data, err := service.InsertBook(&entities.Book{Title: "aw", Author: "wkwk"})
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println(data)
+		}
 		for {
 			messageType, message, err := c.ReadMessage()
 			if err != nil {
